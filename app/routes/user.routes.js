@@ -1,4 +1,4 @@
-const { authJwt } = require("../middleware");
+const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/user.controller");
 
 module.exports = function (app) {
@@ -12,11 +12,11 @@ module.exports = function (app) {
 
   app.get("/api/text/all", controller.allAccess);
 
-  app.get("/api/text/user", [authJwt.verigyToken], controller.userBoard);
+  app.get("/api/text/user", [authJwt.verifyToken], controller.userBoard);
 
   app.get(
     "/api/text/mod",
-    [authJwt.verigyToken, authJwt.isModerator],
+    [authJwt.verifyToken, authJwt.isModerator],
     controller.moderatorBoard
   );
 };
