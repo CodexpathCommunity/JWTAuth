@@ -1,5 +1,4 @@
 module.exports = {
-  HOST: "localhost",
-  PORT: 27017,
-  DB: "codexpath",
+  url: "localhost:27017",
+  name: "codexpath",
 };

@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { url, name } = require("./app/config/db.config");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -19,15 +21,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./app/models");
 const Role = db.role;
 
-db.mongoose
-  .connect(`mongodb://${db.Config.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("successfully connected to MongoDb");
-    initial();
-  });
+const CONNECTION_URL = `mongodb://${url}/${name}`;
+
+mongoose.connect(CONNECTION_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.on("connected", () => {
+  console.log("Mongo has connected succesfully");
+  initial();
+});
+mongoose.connection.on("reconnected", () => {
+  console.log("Mongo has reconnected");
+});
+mongoose.connection.on("error", (error) => {
+  console.log("Mongo connection has an error", error);
+  mongoose.disconnect();
+});
+mongoose.connection.on("disconnected", () => {
+  console.log("Mongo connection is disconnected");
+});
 
 function initial() {
   Role.estimatedDocumentCount((err, count) => {
@@ -38,7 +52,7 @@ function initial() {
         if (err) {
           console.log("error", err);
         }
-        console.log("added moderator to roles collection");
+        console.log("added user to roles collection");
       });
       new Role({
         name: "moderator",
@@ -63,8 +77,8 @@ function initial() {
 app.get("/", (req, res) => {
   res.json({ message: "welcome to codexpath application" });
 });
-require("./app/routes/auth.routes")(app);
-require("./app/routes/user.routes")(app);
+// require("./app/routes/auth.routes")(app);
+// require("./app/routes/user.routes")(app);
 
 //set port, listen for requests
 const PORT = process.env.PORT || 8080;
