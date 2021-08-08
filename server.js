@@ -43,6 +43,20 @@ mongoose.connection.on("disconnected", () => {
   console.log("Mongo connection is disconnected");
 });
 
+//simple route
+app.get("/", (req, res) => {
+  res.json({ message: "welcome to codexpath application" });
+});
+require("./app/routes/auth.routes")(app);
+require("./app/routes/user.routes")(app);
+
+//set port, listen for requests
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`);
+});
+
 function initial() {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
@@ -73,17 +87,3 @@ function initial() {
     }
   });
 }
-
-//simple route
-app.get("/", (req, res) => {
-  res.json({ message: "welcome to codexpath application" });
-});
-require("./app/routes/auth.routes")(app);
-require("./app/routes/user.routes")(app);
-
-//set port, listen for requests
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`);
-});
