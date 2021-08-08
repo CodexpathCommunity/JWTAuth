@@ -50,7 +50,7 @@ exports.signup = (req, res) => {
             res.status(500).send({ message: err });
             return;
           }
-          res.send({ message: "User registerd successfully" });
+          res.send({ message: "User was registerd successfully" });
         });
       });
     }

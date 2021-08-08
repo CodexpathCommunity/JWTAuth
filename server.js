@@ -66,8 +66,9 @@ function initial() {
         name: "admin",
       }).save((err) => {
         if (err) {
-          console.log("added admin to roles collection");
+          console.log("error", err);
         }
+        console.log("added admin to roles collection");
       });
     }
   });
